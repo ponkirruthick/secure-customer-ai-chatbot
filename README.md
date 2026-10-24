@@ -1,32 +1,54 @@
 # Secure Customer AI Chatbot
 
-FastAPI + PostgreSQL + Alembic + Qdrant + Ollama.
+A secure customer-support chatbot built with FastAPI, PostgreSQL, Ollama, and Qdrant. It supports OTP authentication, customer-specific invoice access, and AI-powered invoice questions.
 
-## Windows quick start
-1. Install Python 3.11+, PostgreSQL, Docker Desktop, and Ollama.
-2. Extract ZIP; open folder in VS Code.
-3. PowerShell:
-   ```powershell
-   py -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   pip install -r requirements.txt
-   Copy-Item .env.example .env
-   ```
-4. Edit `.env`: set PostgreSQL password and a long random `JWT_SECRET`.
-5. Start Qdrant:
-   ```powershell
-   docker run -d --name chatbot-qdrant -p 6333:6333 -v qdrant_data:/qdrant/storage qdrant/qdrant
-   ```
-6. In another terminal, run `ollama pull mistral` and `ollama pull nomic-embed-text`.
-7. Create a PostgreSQL database named `customer_chatbot`.
-8. Run:
-   ```powershell
-   alembic upgrade head
-   python -m app.seed
-   uvicorn app.main:app --reload
-   ```
-9. Visit http://127.0.0.1:8000/docs
+## Features
+- OTP-based customer authentication
+- JWT bearer-token authorization
+- Customer-specific invoice retrieval
+- AI-powered chat using Ollama
+- Vector search using Qdrant
+- PostgreSQL database with Alembic migrations
+- API documentation through Swagger UI
 
-OTPs in development are delivered to `runtime/dev_otp.txt`, not returned by the API. Never use this development adapter in production. See `docs/API_AND_TESTING.md` and `docs/PROJECT_REPORT.md`.
+## Tech Stack
+Python · FastAPI · PostgreSQL · SQLAlchemy · Alembic · Qdrant · Ollama · JWT
 
-This is a starter implementation: run the required local verification checklist and record real test results before submitting.
+## Setup
+1. Install Python, PostgreSQL, Ollama, and Qdrant.
+2. Create a virtual environment and install dependencies:
+
+```powershell
+py -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+Copy-Item .env.example .env
+```
+
+3. Configure your database connection and a strong `JWT_SECRET` in `.env`.
+4. Start Qdrant and Ollama, and download the required models: `mistral` and `nomic-embed-text`.
+5. Create the `customer_chatbot` PostgreSQL database.
+6. Run migrations and seed sample data:
+
+```powershell
+alembic upgrade head
+python -m app.seed
+```
+
+7. Start the API:
+
+```powershell
+python -m uvicorn app.main:app --reload
+```
+
+8. Open Swagger UI: http://127.0.0.1:8000/docs
+
+## Documentation
+- `docs/PROJECT_REPORT.md` — project report and limitations
+- `docs/API_AND_TESTING.md` — API guide and testing checklist
+
+## Security Notes
+The development OTP adapter writes codes to `runtime/dev_otp.txt`. It is for local testing only, not production. Never commit `.env`, OTP files, passwords, or secret keys.
+
+## Testing Status
+Refer to the project report and testing checklist for verified results and tests still pending.
